@@ -1,0 +1,164 @@
+[
+  {
+    "id": 1,
+    "slug": "tidewell",
+    "placeholder": true,
+    "title": "Tidewell",
+    "year": 2026,
+    "category": "Product",
+    "role": "Design & frontend",
+    "client": "Personal project",
+    "summary": "Tide and swell forecasts drawn as one continuous chart you scrub with your thumb.",
+    "description": "Most surf apps give you a table of numbers per hour. Tidewell draws the next seven days as a single line — tide height, swell and wind layered on one axis — and lets you drag through time with your thumb. The whole forecast is cached for offline use, because the beach is exactly where the signal disappears.",
+    "highlights": [
+      "Canvas-rendered chart holding 60fps while scrubbing 2,000+ data points",
+      "Offline-first: forecasts cached by a service worker, refreshed in the background",
+      "Haptic ticks on each hour mark on supported devices"
+    ],
+    "tech": ["React", "Canvas 2D", "Service Workers", "Vite"],
+    "cover": "/images/projects/tidewell/cover",
+    "coverAlt": "Tidewell forecast chart with layered tide and swell lines",
+    "gallery": [
+      { "src": "/images/projects/tidewell/01", "alt": "Seven-day tide curve on a phone screen" },
+      { "src": "/images/projects/tidewell/02", "alt": "Detail of the swell and wind layers" }
+    ],
+    "liveUrl": "",
+    "githubUrl": "https://github.com/Aloysious-Kalathil",
+    "featured": true
+  },
+  {
+    "id": 2,
+    "slug": "kiln-studio",
+    "placeholder": true,
+    "title": "Kiln Studio",
+    "year": 2025,
+    "category": "Commerce",
+    "role": "Frontend & WebGL",
+    "client": "Ceramics studio",
+    "summary": "A storefront for a two-person ceramics studio, with every piece on a real-time turntable.",
+    "description": "Handmade ceramics sell on texture and glaze, which flat photos flatten. Each product on Kiln is a photogrammetry scan on a WebGL turntable you can spin and light yourself, with a still-photo fallback for low-power devices. The catalogue is small, so the whole shop is statically generated and loads before you finish scrolling.",
+    "highlights": [
+      "Compressed scans averaging 480 KB each (Draco + KTX2)",
+      "Automatic fallback to photography on low-end GPUs",
+      "Checkout through the Shopify Storefront API — no page reloads"
+    ],
+    "tech": ["Next.js", "Three.js", "Shopify Storefront API", "GSAP"],
+    "cover": "/images/projects/kiln-studio/cover",
+    "coverAlt": "A glazed ceramic bowl on a turntable",
+    "gallery": [
+      { "src": "/images/projects/kiln-studio/01", "alt": "Product page with the 3D turntable" },
+      { "src": "/images/projects/kiln-studio/02", "alt": "Glaze close-up under studio lighting" }
+    ],
+    "liveUrl": "",
+    "githubUrl": "",
+    "featured": true
+  },
+  {
+    "id": 3,
+    "slug": "fieldwork-type",
+    "placeholder": true,
+    "title": "Fieldwork Type",
+    "year": 2025,
+    "category": "Editorial",
+    "role": "Frontend & motion",
+    "client": "Independent type foundry",
+    "summary": "A specimen site where every variable axis of the typeface is a slider you can grab.",
+    "description": "Type foundries mostly sell with static specimens. For Fieldwork, every axis of the variable font — weight, width, optical size — is exposed as a live control, and the specimen pages respond to scroll by sweeping through them. It is a catalogue that doubles as a playground, built to stay fast with six font files in play.",
+    "highlights": [
+      "Scroll-driven axis animation, scrubbed with ScrollTrigger",
+      "Font subsetting cut specimen payload by 71%",
+      "Tester text persists across pages in the session"
+    ],
+    "tech": ["Astro", "GSAP", "Variable fonts", "TypeScript"],
+    "cover": "/images/projects/fieldwork-type/cover",
+    "coverAlt": "Large letterforms from the Fieldwork typeface",
+    "gallery": [
+      { "src": "/images/projects/fieldwork-type/01", "alt": "Weight axis sweep across a headline" },
+      { "src": "/images/projects/fieldwork-type/02", "alt": "Glyph grid page" }
+    ],
+    "liveUrl": "",
+    "githubUrl": "",
+    "featured": true
+  },
+  {
+    "id": 4,
+    "slug": "transit-pulse",
+    "placeholder": true,
+    "title": "Transit Pulse",
+    "year": 2024,
+    "category": "Data",
+    "role": "Frontend & data viz",
+    "client": "Civic hackathon",
+    "summary": "Live bus positions for a whole city, drawn as a single breathing map.",
+    "description": "Transit Pulse streams vehicle positions over WebSockets and interpolates between updates, so buses glide instead of jumping every thirty seconds. Routes that run late slowly warm in colour. Built in a weekend, then kept alive for a year because people actually used it at bus stops.",
+    "highlights": [
+      "Position interpolation between 30-second GPS updates",
+      "Handles 1,200 live vehicles on a mid-range phone",
+      "Colour scale checked for colour-blind legibility"
+    ],
+    "tech": ["Svelte", "Mapbox GL", "WebSockets", "Node.js"],
+    "cover": "/images/projects/transit-pulse/cover",
+    "coverAlt": "City map with bus routes drawn as lines",
+    "gallery": [
+      { "src": "/images/projects/transit-pulse/01", "alt": "Route lines over the city grid" },
+      { "src": "/images/projects/transit-pulse/02", "alt": "Arrival board view" }
+    ],
+    "liveUrl": "",
+    "githubUrl": "https://github.com/Aloysious-Kalathil",
+    "featured": false
+  },
+  {
+    "id": 5,
+    "slug": "margin-notes",
+    "placeholder": true,
+    "title": "Margin Notes",
+    "year": 2024,
+    "category": "Product",
+    "role": "Solo — design & build",
+    "client": "Personal project",
+    "summary": "A reading app that turns your highlights into spaced-repetition cards.",
+    "description": "You highlight a sentence; a week later Margin Notes asks you about it. Everything lives in IndexedDB on your device — no account, no sync server — and the review queue is scheduled with a simplified SM-2 algorithm. The interface is deliberately quiet: one card, one question, one tap.",
+    "highlights": [
+      "Local-first: all data in IndexedDB, exportable as Markdown",
+      "Spaced-repetition scheduling (SM-2 variant)",
+      "Fully keyboard operable, tested with VoiceOver"
+    ],
+    "tech": ["React", "IndexedDB", "Tailwind CSS", "Workbox"],
+    "cover": "/images/projects/margin-notes/cover",
+    "coverAlt": "A review card with a highlighted sentence",
+    "gallery": [
+      { "src": "/images/projects/margin-notes/01", "alt": "Review queue screen" },
+      { "src": "/images/projects/margin-notes/02", "alt": "Highlight export view" }
+    ],
+    "liveUrl": "",
+    "githubUrl": "https://github.com/Aloysious-Kalathil",
+    "featured": false
+  },
+  {
+    "id": 6,
+    "slug": "salt-and-signal",
+    "placeholder": true,
+    "title": "Salt & Signal",
+    "year": 2023,
+    "category": "Editorial",
+    "role": "Frontend & audio",
+    "client": "Podcast",
+    "summary": "A home for a coastal-radio podcast, with a waveform that listens back.",
+    "description": "The site for Salt & Signal is built around its player: the waveform is drawn from the actual audio via the Web Audio API and reacts to the episode as it plays. Episode pages load instantly from a static build and resume where you left off, even across devices on the same browser profile.",
+    "highlights": [
+      "Real-time waveform from an AnalyserNode, drawn on canvas",
+      "Playback persists across page navigations",
+      "Transcripts synced to the audio, clickable to seek"
+    ],
+    "tech": ["Vite", "Web Audio API", "Canvas", "Eleventy"],
+    "cover": "/images/projects/salt-and-signal/cover",
+    "coverAlt": "Audio waveform over a sea-blue field",
+    "gallery": [
+      { "src": "/images/projects/salt-and-signal/01", "alt": "Episode page with the live waveform" },
+      { "src": "/images/projects/salt-and-signal/02", "alt": "Synced transcript" }
+    ],
+    "liveUrl": "",
+    "githubUrl": "",
+    "featured": false
+  }
+]

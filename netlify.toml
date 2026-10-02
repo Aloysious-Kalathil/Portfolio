@@ -1,0 +1,25 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# The contact form posts to /api/verify-and-send (same URL as on Vercel)
+[[redirects]]
+  from = "/api/verify-and-send"
+  to = "/.netlify/functions/verify-and-send"
+  status = 200
+  force = true
+
+# Single-page app: every other route is handled by React Router
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

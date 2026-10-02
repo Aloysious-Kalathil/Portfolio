@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "placeholder": true,
+    "quote": "PLACEHOLDER — Found the three interactions that actually mattered, spent the time there, and talked us out of the rest. The site feels expensive in the way we couldn’t describe in the brief.",
+    "name": "Placeholder Name",
+    "role": "Creative Director",
+    "company": "Studio name"
+  },
+  {
+    "id": 2,
+    "placeholder": true,
+    "quote": "PLACEHOLDER — Our Lighthouse score went from 54 to 97 and the animations got better, not fewer. I didn’t know both were possible at once.",
+    "name": "Placeholder Name",
+    "role": "Head of Product",
+    "company": "Company name"
+  },
+  {
+    "id": 3,
+    "placeholder": true,
+    "quote": "PLACEHOLDER — Handed over a component library our own team could extend the next week without asking a single question. That’s rarer than a nice hover state.",
+    "name": "Placeholder Name",
+    "role": "Engineering Lead",
+    "company": "Company name"
+  }
+]

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>__TITLE__</title>
+    <meta name="description" content="__DESCRIPTION__" />
+    <meta name="theme-color" content="#0B0D14" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/images/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/images/icons/apple-touch-icon.png" />
+
+    <!-- Open Graph / social defaults (pages override title + description) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="__NAME__" />
+    <meta property="og:title" content="__TITLE__" />
+    <meta property="og:description" content="__DESCRIPTION__" />
+    <meta property="og:image" content="__SITE_URL____OG_IMAGE__" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Self-hosted fonts: preload the two that render above the fold -->
+    <link rel="preload" href="/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Theme + preloader state before first paint (no flash) -->
+    <script>
+      ;(function () {
+        var root = document.documentElement
+        var fallback = '__DEFAULT_THEME__'
+        var saved = null
+        try { saved = localStorage.getItem('theme') } catch (e) {}
+        var system = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        root.dataset.themeSource = saved ? 'saved' : fallback
+        root.dataset.theme = saved || (fallback === 'system' ? system : fallback)
+        root.style.setProperty('--accent-base', '__ACCENT_RGB__')
+        root.style.setProperty('--accent-ink-light', '__ACCENT_INK_RGB__')
+
+        var seen = false
+        try { seen = sessionStorage.getItem('preloaded') === '1' } catch (e) {}
+        if (__PRELOADER__ && !seen) root.classList.add('is-preloading')
+      })()
+    </script>
+    <!-- Critical CSS for the boot preloader: it paints before any JS loads.
+         src/components/layout/Preloader.jsx animates it, then removes it. -->
+    <style>
+      .boot{display:none}
+      html.is-preloading .boot{display:block;position:fixed;inset:0;z-index:90;color:rgb(var(--fg));font-family:'Geist Mono',ui-monospace,monospace}
+      .boot__panel{position:absolute;left:0;right:0;height:50.5%;background:rgb(var(--bg))}
+      .boot__panel--top{top:0}.boot__panel--bottom{bottom:0}
+      .boot__content{position:relative;height:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(16px,3.2vw,56px)}
+      .boot__row{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgb(var(--muted))}
+      .boot__count{font-family:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;font-weight:800;font-size:clamp(5rem,22vw,20rem);line-height:.78;letter-spacing:-.06em;color:rgb(var(--fg));font-variant-numeric:tabular-nums;text-transform:none}
+      .boot__line{margin-top:24px;height:1px;background:rgb(var(--fg)/.15)}
+      .boot__bar{height:100%;background:rgb(var(--accent,var(--accent-base)));transform:scaleX(0);transform-origin:left}
+    </style>
+    <noscript>
+      <style>html.is-preloading body { overflow: auto } html.is-preloading .boot { display: none }</style>
+    </noscript>
+  </head>
+  <body>
+    <div id="boot" class="boot" role="status" aria-label="Loading">
+      <div class="boot__panel boot__panel--top" data-panel="top"></div>
+      <div class="boot__panel boot__panel--bottom" data-panel="bottom"></div>
+      <div class="boot__content" data-preloader-content>
+        <div class="boot__row"><span>__NAME__</span><span>__LOCATION__</span></div>
+        <div>
+          <div class="boot__row"><span>Selected work, __YEAR__</span><span class="boot__count" data-count aria-hidden="true">000</span></div>
+          <div class="boot__line"><div class="boot__bar" data-bar></div></div>
+        </div>
+      </div>
+    </div>
+    <div id="root"></div>
+    <noscript>
+      <p style="padding:24px;font-family:system-ui">This portfolio needs JavaScript for its interactive parts. You can still reach me at __EMAIL__.</p>
+    </noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

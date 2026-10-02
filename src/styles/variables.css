@@ -1,0 +1,71 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   Theme variables. Colours are stored as "R G B" channels so Tailwind can
+   apply opacity (bg-fg/10 etc). The accent is overwritten at boot from
+   siteConfig.js (see src/main.jsx), these are the fallbacks.
+   ────────────────────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url('/fonts/bricolage-grotesque-latin.woff2') format('woff2');
+  /* Subset to what the site uses: optical size pinned at 96, weights 700–800 */
+  font-weight: 700 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/geist-latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/geist-mono-latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Dark is the default identity */
+  --bg: 11 13 20;          /* #0B0D14 */
+  --fg: 232 234 242;       /* #E8EAF2 */
+  --muted: 141 146 165;    /* #8D92A5 — 6.3:1 on bg */
+  /* --accent-base and --accent-ink-light are written inline on <html> from
+     siteConfig.accent / accentInk; these are only fallbacks. */
+  --accent: var(--accent-base, 198 242 58); /* #C6F23A */
+  --accent-ink-light: 75 102 0;   /* #4B6600 — 5.6:1 on the light bg */
+  --accent-ink: var(--accent);    /* accent used as TEXT */
+  --accent-contrast: 11 13 20;
+
+  /* Layout */
+  --margin: clamp(16px, 3.2vw, 56px);
+  --gutter: clamp(12px, 1.6vw, 28px);
+  --header-h: 72px;
+  --section-y: clamp(96px, 14vw, 220px);
+
+  /* Motion (mirrors GSAP defaults in utils/gsapSetup.js) */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: 236 238 243;       /* #ECEEF3 */
+  --fg: 11 13 20;          /* #0B0D14 */
+  --muted: 84 90 107;      /* #545A6B — 5.9:1 on bg */
+  /* A bright accent vanishes on a light background (dots, focus ring), so
+     the light theme uses the darker ink shade for every accent use */
+  --accent: var(--accent-ink-light);
+  --accent-ink: var(--accent-ink-light);
+  --accent-contrast: 236 238 243;
+  color-scheme: light;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-h: 88px;
+  }
+}
