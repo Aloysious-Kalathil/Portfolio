@@ -6,7 +6,7 @@ Built with a focus on expressive typography, motion, WebGL, accessibility, and r
 
 ### [View Live Portfolio →](https://aloysious.dev)
 
-![Portfolio Preview](./public/images/readme/portfolio.webp)
+![Portfolio Preview](./public/public/videos/portfolio.webp)
 
 ---
 
