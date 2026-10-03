@@ -1,3 +1,4 @@
+# optional if doing in vercel then no need in netlify
 [build]
   command = "npm run build"
   publish = "dist"
