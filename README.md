@@ -1,254 +1,318 @@
 # George Aloysious — Portfolio
 
-A dark editorial portfolio built with **React + Vite + Tailwind CSS**, animated with **GSAP + ScrollTrigger + SplitText**, smoothed by **Lenis**, with **Three.js (React Three Fiber)** for the background mesh and the project shader transition.
+Personal portfolio showcasing selected projects, frontend work, and interactive web experiences.
 
-**Design direction:** a type specimen more than a template. Bricolage Grotesque (display, 800, tight tracking) with Geist and Geist Mono, one ink-navy background (`#0B0D14`), one text colour and one lime accent (`#C6F23A`, deepened to olive `#4B6600` on the light theme), over an interactive 3D wire terrain. Navigation is a stack of pills top-left and the name set vertically top-right. Motion uses `expo.out` and `power4.inOut` easing throughout: masked line reveals, text that resolves out of scrambled letters, scroll-scrubbed parallax and 3D rollers. Nothing bounces.
+Built with a focus on expressive typography, motion, WebGL, accessibility, and responsive interaction.
 
-**Home, top to bottom:** a hero of live coordinate markers around a giant outlined name that fills in under the pointer → one long about paragraph that lights up word by word → the featured projects, one tilting frame per screen → "What I do" as 3D rollers on a full-accent field → a scattered wall of project pictures → a staggered contact footer.
+### [View Live Portfolio →](https://YOUR-DOMAIN.com)
 
----
-
-## Contents
-
-1. [Quick start](#quick-start)
-2. [Where to edit content](#where-to-edit-content)
-3. [Images, logos, résumé](#images-logos-résumé)
-4. [Environment variables and reCAPTCHA](#environment-variables-and-recaptcha)
-5. [Deploying for free (Vercel or Netlify)](#deploying-for-free)
-6. [How the pieces fit](#how-the-pieces-fit)
-7. [Accessibility, reduced motion and performance](#accessibility-reduced-motion-and-performance)
-8. [Placeholder checklist](#placeholder-checklist)
+![Portfolio Preview](./public/images/readme/preview.webp)
 
 ---
 
-## Quick start
+## About
 
-Requires **Node 20+**.
+This portfolio is designed as an interactive experience rather than a traditional static portfolio.
 
-```bash
-npm install
-cp .env.example .env    # then fill in keys (optional for local browsing)
-npm run dev             # http://localhost:5173
-npm run build           # production build → dist/
-npm run preview         # serve dist/ locally
-```
-
-The contact endpoint (`/api/verify-and-send`) also runs inside `npm run dev` through a small Vite middleware, so you can test the whole form locally once your keys are in `.env`.
+It combines editorial typography, scroll-driven animation, custom page transitions, responsive WebGL effects, and project-focused storytelling while maintaining accessibility and graceful fallbacks across different devices.
 
 ---
 
-## Where to edit content
+## Tech Stack
 
-Almost everything lives in three files.
-
-### `src/config/siteConfig.js`: settings and your content
-
-| Setting | What it does |
-| --- | --- |
-| `settings.defaultTheme` | `'dark'`, `'light'` or `'system'`. A visitor's own toggle choice is saved and wins. |
-| `settings.accent` / `accentInk` | The accent colour, plus a darker shade of it used for accent **text** on the light theme (to keep 4.5:1 contrast). |
-| `settings.features.*` | Switches for `preloader`, `cursor`, `smoothScroll`, `webgl`, `backgroundMesh`, `magnetic`, `pageTransitions` and `layoutGrid`. |
-| `settings.homeSections` | Order of Home sections. Remove a key to hide it. Keys: `hero`, `manifesto`, `work`, `features`, `collage`, `testimonials` (testimonials is off by default; add the key to show it). |
-
-Below the settings sit your name, title, tagline, bio, the `manifesto` paragraph (wrap a phrase in `*asterisks*` to set it in the display face), location/timezone (drives the live clock), email, availability, résumé path, social links (an empty `url` hides that network), services ("What I do"), skills (the marquee rows), the About page copy, experience/education, contact copy (including the pill choices on the contact form: `contact.topics` and `contact.timelines`) and SEO defaults.
-
-> `index.html` has your name, theme default and accent baked in at build time (so they're correct before any JavaScript runs). After editing `siteConfig.js`, **restart `npm run dev`** to see those values change in the page shell.
-
-### `src/data/projects.json`
-
-```jsonc
-{
-  "id": 1,
-  "slug": "tidewell",               // URL: /projects/tidewell
-  "placeholder": true,              // shows a "Sample" tag — delete this line for real projects
-  "title": "Tidewell",
-  "year": 2026,
-  "category": "Product",            // used by the filter pills on /projects (?category=)
-  "role": "Design & frontend",
-  "client": "Personal project",
-  "summary": "One line shown under the project on Home.",
-  "description": "The paragraph on the project page.",
-  "highlights": ["Optional", "numbered", "bullet points"],
-  "tech": ["React", "Canvas 2D"],
-  "cover": "/images/projects/tidewell/cover",       // no extension (see Images)
-  "coverAlt": "Describe the image",
-  "gallery": [{ "src": "/images/projects/tidewell/01", "alt": "…" }],
-  "liveUrl": "",                    // empty = hidden
-  "githubUrl": "",
-  "featured": true                  // featured projects get a full-screen frame on Home
-}
-```
-
-### `src/data/testimonials.json`
-
-Three placeholders, each marked `"placeholder": true`, which shows a visible **Placeholder** tag. Replace them with real quotes and remove that flag, or delete the file's entries to hide the section.
+- **React**
+- **Vite**
+- **Tailwind CSS**
+- **GSAP**
+- **ScrollTrigger**
+- **SplitText**
+- **Lenis**
+- **Three.js**
+- **React Three Fiber**
+- **Headless UI**
+- **Resend**
+- **Google reCAPTCHA v3**
+- **Vercel**
 
 ---
 
-## Images, logos, résumé
+## Highlights
 
-### Images (modern formats, lazy-loaded)
+### Interactive WebGL Background
 
-Images are referenced **without an extension**. For each image, add four files:
+A Three.js wire terrain runs behind the site and reacts to pointer movement, touch interaction, clicks, and scroll position.
 
-```
-public/images/projects/<slug>/cover-800.avif
-public/images/projects/<slug>/cover-800.webp
-public/images/projects/<slug>/cover-1600.avif
-public/images/projects/<slug>/cover-1600.webp
-```
+The effect is automatically disabled when WebGL is unavailable, reduced motion is enabled, Save-Data is active, or the device does not meet the required capabilities.
 
-The same applies to gallery images (`01`, `02`, …) and the portrait (`public/images/portrait-*`). An easy way to make them is [Squoosh](https://squoosh.app): resize to 800 px and 1600 px wide, then export as AVIF (quality ~60) and WebP (quality ~80). Covers work best around **10:7**, because cards crop them to 4:3, 4:5 and 16:10, and project pages show them full-screen.
+### Project Transitions
 
-The current artwork is generated placeholder art. Replace it before launch.
+Project cards transition into their detail pages using a custom WebGL shader animation.
 
-### Logos and icons
+If WebGL is unavailable, the site falls back to a GSAP-powered image expansion.
 
-The site's own mark is the name set vertically in the top-right corner (text, from `siteConfig.name`), so there is no logo image to maintain in the layout. `public/images/logos/logo-dark.svg` (light ink) and `logo-light.svg` (dark ink) are the "GA." monogram outlined from Bricolage Grotesque, kept for use elsewhere (email signature, README, social profiles). Their accent square is hard-coded (`#C6F23A` in `logo-dark.svg` and `icon.svg`, `#4B6600` in `logo-light.svg`), so change it there if you change the accent.
+Reduced-motion users receive a simplified fade transition.
 
-Favicon files: `public/favicon.ico`, `public/images/icons/icon.svg` and `apple-touch-icon.png`. The social share image is `public/images/og.jpg` (1200×630).
+### Scroll & Animation System
 
-### Résumé
+Lenis smooth scrolling is synchronized with GSAP and ScrollTrigger so scroll-based animations remain consistent throughout the site.
 
-Replace `public/resume.pdf` (currently a placeholder page), or point `resume` in `siteConfig.js` elsewhere.
+Animations are scoped and cleaned up during route changes to prevent stale timelines and ScrollTriggers.
 
----
+### Responsive Motion
 
-## Environment variables and reCAPTCHA
+The animation system adapts based on device capabilities and user preferences.
 
-`.env` is git-ignored. `.env.example` lists every key:
+When `prefers-reduced-motion` is enabled, the site disables:
 
-| Variable | Where it's used | Exposed to the browser? |
-| --- | --- | --- |
-| `VITE_RECAPTCHA_SITE_KEY` | Contact page (gets the token) | Yes (public by design) |
-| `RECAPTCHA_SECRET_KEY` | `api/verify-and-send.js` | **No** |
-| `RECAPTCHA_MIN_SCORE` | Minimum accepted score, default `0.5` | No |
-| `RESEND_API_KEY` | Sends the email | **No** |
-| `CONTACT_TO_EMAIL` | Where messages arrive (comma-separate several) | No |
-| `CONTACT_FROM_EMAIL` | Sender, e.g. `Portfolio <onboarding@resend.dev>` | No |
+- Smooth scrolling
+- Parallax
+- Custom cursor effects
+- Magnetic interactions
+- WebGL effects
+- Scrambled text
+- 3D rollers
 
-Only variables prefixed with `VITE_` ever reach the browser bundle. Never put a secret behind that prefix.
+Touch devices also receive simplified interactions where pointer-specific effects are not appropriate.
 
-### Getting reCAPTCHA v3 keys
+### Accessibility
 
-1. Go to <https://www.google.com/recaptcha/admin/create>.
-2. Choose **reCAPTCHA v3** (score-based).
-3. Add your domains: `localhost`, your production domain, and your `*.vercel.app` / `*.netlify.app` domain.
-4. Copy the **site key** to `VITE_RECAPTCHA_SITE_KEY` and the **secret key** to `RECAPTCHA_SECRET_KEY`.
+The portfolio includes:
 
-The reCAPTCHA script loads **only on the Contact page**. Google's floating badge is hidden and replaced by the required text notice under the form.
-
-### Getting a Resend key
-
-1. Sign up at <https://resend.com> and create an API key → `RESEND_API_KEY`.
-2. While testing, `onboarding@resend.dev` can only send **to the email you signed up with**, so set that as `CONTACT_TO_EMAIL`.
-3. For production, verify your own domain in Resend and set `CONTACT_FROM_EMAIL` to something like `Portfolio <hello@your-domain.com>`.
-
-### What the function does
-
-`api/verify-and-send.js`:
-1. Validates the fields with the same rules the form uses. A filled honeypot field is silently accepted and dropped.
-2. Posts the token to Google's `siteverify`, and rejects failures, the wrong `action`, or a score below `RECAPTCHA_MIN_SCORE`.
-3. Sends a plain-text and HTML-escaped email through Resend, with `reply_to` set to the sender.
-
-Every failure returns a clear message that the form shows inline. No `alert()` popups anywhere.
+- Semantic page landmarks
+- Skip navigation
+- Keyboard navigation
+- Visible focus states
+- Reduced-motion support
+- Accessible modal focus management
+- Accessible form validation
+- Screen-reader-friendly animated text
+- WCAG AA text contrast
 
 ---
 
-## Deploying for free
+## Pages
 
-### Vercel (recommended)
+The site includes:
 
-1. Push this repo to GitHub.
-2. In Vercel: **Add New… → Project → import the repo**. The framework is detected as **Vite**, the build command is `npm run build` and the output directory is `dist`.
-3. **Settings → Environment Variables**: add every variable from `.env.example` (both `VITE_…` and server keys).
-4. Deploy. `api/verify-and-send.js` becomes a serverless function at `/api/verify-and-send` automatically, and `vercel.json` rewrites every other route to the SPA.
-5. Add your domain, then update `seo.siteUrl` in `siteConfig.js` and the reCAPTCHA domain list.
-
-### Netlify
-
-1. **Add new site → Import an existing project → pick the repo.** `netlify.toml` already sets the build command, the `dist` publish folder and the functions folder.
-2. **Site configuration → Environment variables**: add everything from `.env.example`.
-3. Deploy. `netlify/functions/verify-and-send.mjs` wraps the same handler, and `netlify.toml` routes `/api/verify-and-send` to it and sends all other routes to the SPA.
+- **Home**
+- **About**
+- **Projects**
+- **Project Details**
+- **Contact**
+- **404**
 
 ---
 
-## How the pieces fit
+## Project Structure
 
-```
+```text
+src/
+├── components/
+│   ├── ui/
+│   ├── layout/
+│   └── animations/
+├── pages/
+├── sections/
+├── hooks/
+├── utils/
+├── styles/
+├── config/
+├── data/
+├── App.jsx
+└── main.jsx
+
 public/
-├── images/        logos/, icons/, backgrounds/, projects/<slug>/, portrait-*, og.jpg
-├── models/        3D models (glb, gltf) if you add any
+├── images/
+├── models/
 ├── videos/
 ├── fonts/
 └── favicon.ico
-src/
-├── assets/        images/, icons/, fonts/ (for assets imported from code)
-├── components/
-│   ├── ui/        Button, Card, Modal, Picture, Seo, BrandIcon
-│   ├── layout/    Navbar (pills, wordmark, progress bar), Footer, Sidebar, Cursor,
-│   │              Preloader, PageTransition
-│   └── animations/SplitTextReveal, ScrambleText, ScrollFade, Parallax, MagneticButton,
-│                  BackgroundMesh, GridToFullscreen (+ GridTransitionScene shader)
-├── pages/         Home, About, Projects, ProjectDetail, Contact, NotFound
-├── sections/      Hero, Manifesto, Work, Features, Collage, Testimonials
-├── hooks/         useLenis (smooth scroll + scroll lock), useScroll (+ useChromeTone),
-│                  useTheme, useReducedMotion, useIsTouch, useFeatures (effective
-│                  switches), useSiteReady (preloader / transition gates)
-├── utils/         gsapSetup.js (plugins, easing), liveColor.js, api.js (form +
-│                  reCAPTCHA), formatDate.js
-├── styles/        globals.css, variables.css
-├── config/        siteConfig.js (all settings + content), routes.js (lazy pages, nav)
-├── data/          projects.json, testimonials.json
-├── App.jsx
-└── main.jsx
-api/               verify-and-send.js          (contact form serverless function)
-netlify/functions/ verify-and-send.mjs         (Netlify adapter for the same function)
+
+api/
+└── verify-and-send.js
 ```
 
-- **Navigation:** `Navbar.jsx` renders two fixed pills (Menu, Let's talk) and the vertical name. Menu opens in place into a row of page pills plus the theme switch; Escape or a click outside closes it. A section can call `useChromeTone(ref)` to flip the pills and name to a readable colour pair while it sits underneath them (the accent "What I do" section does).
-- **Hero:** `Markers` lays small "+ 000" markers on the column lines; each shows its distance in pixels to the pointer and warms to the live colour as it gets close (page position when there is no pointer). The name is sized to run edge to edge, drawn as an outline, and a radial mask following the pointer fills it in. On touch screens and with reduced motion it is simply solid.
-- **Scrambled text:** `ScrambleText` resolves a label out of random letters on load, on scroll or on hover. Screen readers get the plain text.
-- **What I do:** each service in `sections/Features.jsx` is a four-sided CSS 3D roller (title, description, tools, title) turned by scroll. With reduced motion it renders as a plain list.
-- **Work page:** five columns (three on tablets, two on phones) list the projects from different starting points and drift at different speeds. Only the first column is exposed to keyboards and screen readers; the others repeat it.
-- **Smooth scroll:** a single Lenis instance is driven by `gsap.ticker` and calls `ScrollTrigger.update` on scroll, so the two never disagree. Menus and modals stop it (`useScrollLock`), and it resets to the top on every route change.
-- **Page transitions:** `PageTransition.jsx` keeps the old route rendered while a panel wipes up over it and the next page's code loads. It then swaps pages behind the panel, scrolls to top, refreshes ScrollTrigger and wipes off. Intro animations wait until the page is actually visible (`whenPageVisible()`).
-- **Project → detail:** clicking a project (a Home frame or a Work-page card) hands its screen rect to an overlay that lives outside the routes. The overlay expands the image with a vertex shader, navigates, and lifts only once the detail page's hero image has loaded. Without WebGL, a GSAP-scaled image does the same job. With reduced motion, it's a short fade.
-- **Background mesh:** `BackgroundMesh.jsx` draws a wire terrain on a fixed canvas behind every page. It rises under the mouse or a finger, sends a ripple out from each click or tap, and drifts, tilts and swells as the page scrolls. It loads when the browser is idle, follows the theme colours, and is skipped wherever WebGL is (reduced motion, software GPUs, Save-Data). Turn it off with `features.backgroundMesh: false`.
-- **Cleanup:** every animation lives in `useGSAP` / `gsap.context`, so switching pages reverts all tweens, ScrollTriggers and SplitText splits.
-- **Cursor:** a small GSAP `quickTo` dot and a trailing ring that becomes a caret over large text. Its colour, the background mesh glow and the hero markers all share one "live colour" (`utils/liveColor.js`) that starts at the accent and drifts through hues as you move and scroll. Data attributes set its states: `data-cursor="view|drag|text|link|none"` and `data-cursor-label="…"`.
+Portfolio content is primarily managed through:
 
-Tooling note: `@fortawesome/free-brands-svg-icons` provides the social icons, rendered by the small `BrandIcon` component instead of FontAwesome's ~70 KB runtime.
+```text
+src/config/siteConfig.js
+src/data/projects.json
+src/data/testimonials.json
+```
 
 ---
 
-## Accessibility, reduced motion and performance
+## Local Development
 
-| Condition | What changes |
-| --- | --- |
-| `prefers-reduced-motion` | No Lenis, parallax, cursor, magnetic pull, WebGL, text scramble or rollers. Reveals become short opacity fades, and transitions become quick crossfades. |
-| Touch / coarse pointer | No custom cursor, magnetic effects or name spotlight (the name is solid). Native scrolling. The background mesh still follows a finger and ripples on tap. |
-| No hardware WebGL (software renderer, Save-Data, < 2 GB memory) | Background mesh skipped. Projects open with the GSAP image expansion. |
+Requires **Node.js 20+**.
 
-Other details:
-- Semantic landmarks, a skip link, and one visible focus style in both themes.
-- Headless UI handles focus trapping and Escape in the image modal; the menu closes on Escape and on a click outside.
-- The form marks invalid fields with `aria-invalid` plus described-by messages, and moves focus to the first invalid field.
-- The contact form's pill choices are radio groups (`role="radiogroup"`) with a visible selected state.
-- Text colours meet WCAG AA in both themes.
-- Per-page title, description, canonical and Open Graph tags (`Seo.jsx`). `robots.txt` and `sitemap.xml` are generated at build from `seo.siteUrl`.
+```bash
+git clone https://github.com/Aloysious-Kalathil/Portfolio.git
+cd Portfolio
 
-Lighthouse scores have not been re-measured since the redesign. Run it against `npm run preview` before launch.
+npm install
+cp .env.example .env
+npm run dev
+```
+
+The local development server runs at:
+
+```text
+http://localhost:5173
+```
+
+Create and preview a production build with:
+
+```bash
+npm run build
+npm run preview
+```
 
 ---
 
-## Placeholder checklist
+## Environment Variables
 
-Everything below is sample content, marked `PLACEHOLDER` in the code where it's text:
+Create a `.env` file based on `.env.example`.
 
-- [ ] `siteConfig.js`: title, tagline, bio, manifesto, location/coordinates, **email**, availability, social URLs, services, skills, About copy, experience, education, contact copy, `seo.siteUrl`
-- [ ] `projects.json`: all six projects (remove `"placeholder": true` as you replace them)
-- [ ] `testimonials.json`: three quotes
-- [ ] Images: project covers and galleries, `portrait-*`, `og.jpg`
-- [ ] `public/resume.pdf`
-- [ ] `.env` / hosting environment variables
+```env
+VITE_RECAPTCHA_SITE_KEY=
+RECAPTCHA_SECRET_KEY=
+RECAPTCHA_MIN_SCORE=0.5
+
+RESEND_API_KEY=
+CONTACT_TO_EMAIL=
+CONTACT_FROM_EMAIL=
+```
+
+Only variables prefixed with `VITE_` are exposed to the browser.
+
+Sensitive values such as the reCAPTCHA secret and Resend API key remain server-side.
+
+---
+
+## Contact Form
+
+The contact form uses:
+
+**reCAPTCHA v3 → Vercel serverless function → Resend**
+
+The backend endpoint:
+
+```text
+/api/verify-and-send
+```
+
+is handled by:
+
+```text
+api/verify-and-send.js
+```
+
+The serverless function:
+
+1. Validates submitted fields
+2. Checks the honeypot field
+3. Verifies the reCAPTCHA token
+4. Validates the expected action and minimum score
+5. Sends the message through Resend
+6. Uses the visitor's email as the reply-to address
+
+Secrets are never exposed to the client.
+
+---
+
+## Performance
+
+The site includes several performance-focused optimizations and fallbacks:
+
+- Lazy-loaded routes
+- Lazy-loaded project imagery
+- Responsive AVIF and WebP images
+- Deferred WebGL initialization
+- WebGL capability detection
+- `Save-Data` awareness
+- Reduced effects on lower-capability devices
+- Animation cleanup during route changes
+
+---
+
+## SEO
+
+Each page includes its own:
+
+- Page title
+- Meta description
+- Canonical URL
+- Open Graph metadata
+
+The project also generates:
+
+```text
+robots.txt
+sitemap.xml
+```
+
+using the configured production site URL.
+
+---
+
+## Deployment
+
+The portfolio is deployed on **Vercel**.
+
+Vercel handles both the frontend deployment and the serverless contact endpoint:
+
+```text
+api/verify-and-send.js
+```
+
+The contact form sends email through **Resend**.
+
+Before deploying, configure the required variables from `.env.example` in:
+
+**Vercel → Project Settings → Environment Variables**
+
+The production flow is:
+
+```text
+Visitor
+   ↓
+React Portfolio
+   ↓
+reCAPTCHA v3
+   ↓
+Vercel Serverless Function
+   ↓
+Resend
+   ↓
+Email
+```
+
+---
+
+## Design & Motion
+
+The visual system is built around:
+
+- Bricolage Grotesque
+- Geist
+- Geist Mono
+- Editorial-scale typography
+- Dark and light themes
+- Accent-driven interaction states
+- Scroll-scrubbed movement
+- Masked text reveals
+- Scrambled text transitions
+- 3D service rollers
+- Interactive WebGL terrain
+- Shader-based project transitions
+
+Motion primarily uses `expo.out` and `power4.inOut` easing to keep interaction consistent across the site.
+
+---
+
+## License
+
+The source code is available for reference and learning.
+
+The portfolio's personal content, branding, design assets, project imagery, and written material should not be copied or redistributed as someone else's work.
