@@ -21,7 +21,7 @@ function WorkFrame({ project, index }) {
       if (reduced) return
       gsap.fromTo(
         '[data-frame]',
-        { scale: 0.68, rotate: index % 2 ? 4 : -4 },
+        { scale: 0.68, rotate: index % 2 ? 2.5 : -2.5 },
         {
           scale: 1,
           rotate: 0,
@@ -40,23 +40,23 @@ function WorkFrame({ project, index }) {
         onClick={(event) => openProject(event, project)}
         data-cursor="view"
         data-cursor-label="Open"
-        className="group mx-auto block w-full focus-visible:outline-offset-8 md:w-[68%]"
+        className="group mx-auto block w-full focus-visible:outline-offset-8 md:w-[76%]"
       >
         <div data-frame className="will-change-transform">
-          <p className="mb-3 flex items-baseline justify-between gap-6 text-[clamp(1rem,1.3vw,1.25rem)] font-medium text-accent-ink">
-            <span className="tabular"># {pad(index + 1, 3)}</span>
-            <span>
+          <p className="mb-3 flex items-baseline justify-between gap-6">
+            <span className="tabular text-[clamp(1rem,1.3vw,1.25rem)] font-medium text-accent-ink"># {pad(index + 1, 3)}</span>
+            <span className="label">
               {project.category}, {project.year}
             </span>
           </p>
           <div data-card-media className="zoom-media relative aspect-[16/10]">
-            <Picture src={project.cover} alt={project.coverAlt || ''} sizes="(min-width:768px) 68vw, 100vw" className="h-full w-full" />
+            <Picture src={project.cover} alt={project.coverAlt || ''} sizes="(min-width:768px) 76vw, 100vw" className="h-full w-full" />
             {project.placeholder && (
               <span className="absolute left-3 top-3 bg-bg/90 px-2 py-1 font-mono text-label uppercase text-muted">Sample</span>
             )}
           </div>
         </div>
-        <div className="mt-5 grid gap-3 md:grid-cols-[1fr_22rem] md:items-start md:gap-10">
+        <div className="mt-3 grid gap-3 md:grid-cols-[1fr_22rem] md:items-start md:gap-10">
           <h3 className="display text-display-md">
             <ScrambleText trigger="scroll" hover>
               {project.title}

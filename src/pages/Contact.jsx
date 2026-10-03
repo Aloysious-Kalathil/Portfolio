@@ -63,7 +63,7 @@ function Field({ name, label, error, hint, as = 'input', value, onChange, onBlur
 }
 
 /** A question answered by picking one pill (a radio group). */
-function PillGroup({ name, legend, options, value, onChange, error, disabled }) {
+function PillGroup({ name, legend, options, value, onChange, error, disabled, required = false }) {
   const id = useId()
   return (
     <div
@@ -71,9 +71,13 @@ function PillGroup({ name, legend, options, value, onChange, error, disabled }) 
       aria-labelledby={`${id}-legend`}
       aria-describedby={error ? `${id}-error` : undefined}
       aria-invalid={error ? 'true' : undefined}
+      aria-required={required || undefined}
     >
-      <p id={`${id}-legend`} className={`${PROMPT} mb-4`}>
-        {legend}
+      <p className="mb-4 flex items-baseline gap-3">
+        <span id={`${id}-legend`} className={PROMPT}>
+          {legend}
+        </span>
+        {required && <span className="label">Required</span>}
       </p>
       <div className="flex flex-wrap gap-1.5">
         {options.map((option) => {
@@ -88,6 +92,7 @@ function PillGroup({ name, legend, options, value, onChange, error, disabled }) 
               onClick={() => onChange({ target: { name, value: checked ? '' : option } })}
               className={`pill pill-lg ${checked ? '' : 'pill-ghost'}`}
             >
+              {checked && <CheckIcon className="-ml-1 size-4 stroke-[2.5]" aria-hidden="true" />}
               {option}
             </button>
           )
@@ -114,13 +119,7 @@ function Success({ name, onReset }) {
         <CheckIcon className="size-6" aria-hidden="true" />
       </span>
       <p className="display mt-8 text-display-sm">Thanks{name ? `, ${name.split(' ')[0]}` : ''}. It’s in my inbox.</p>
-      <p className="mt-4 max-w-prose text-muted">
-        I read everything myself and reply within two working days. If it’s urgent, email{' '}
-        <a href={`mailto:${siteConfig.email}`} className="link-draw text-fg">
-          {siteConfig.email}
-        </a>
-        .
-      </p>
+      <p className="mt-4 max-w-prose text-muted">I read every message myself and usually reply within two working days.</p>
       <div className="mt-10">
         <Button onClick={onReset} variant="outline" icon={null}>
           Send another message
@@ -226,20 +225,10 @@ export default function Contact() {
                 <span className="link-draw break-all">{siteConfig.email}</span>
               </a>
             </div>
-            <div className={PROMPT}>
-              <p>
-                Based<span className="pl-[1.4em]">in:</span>
-              </p>
-              <p className="mt-2 text-fg">
-                {siteConfig.location.city}, {siteConfig.location.country} — <LocalTime />
-              </p>
-            </div>
-            {siteConfig.availability && (
-              <p className="flex max-w-sm items-baseline gap-2 text-muted">
-                <span aria-hidden="true" className="size-1.5 shrink-0 -translate-y-0.5 rounded-full bg-accent" />
-                {siteConfig.availability}
-              </p>
-            )}
+            <p className="text-muted">
+              {siteConfig.location.city}, {siteConfig.location.country} — <LocalTime /> local time
+            </p>
+            {siteConfig.availability && <p className="max-w-sm text-sm text-muted">{siteConfig.availability}</p>}
           </ScrollFade>
 
           {/* Form */}
@@ -248,7 +237,7 @@ export default function Contact() {
               <Success name={sentName} onReset={reset} />
             ) : (
               <ScrollFade trigger="load" delay={0.55}>
-                <form ref={formRef} onSubmit={submit} noValidate aria-busy={loading} className="space-y-14">
+                <form ref={formRef} onSubmit={submit} noValidate aria-busy={loading} className="space-y-10 md:space-y-12">
                   <PillGroup
                     name="subject"
                     legend="I’m writing about:"
@@ -257,14 +246,7 @@ export default function Contact() {
                     onChange={update}
                     error={errors.subject}
                     disabled={loading}
-                  />
-                  <PillGroup
-                    name="timeline"
-                    legend="It needs to happen:"
-                    options={contact.timelines}
-                    value={values.timeline}
-                    onChange={update}
-                    disabled={loading}
+                    required
                   />
                   <div>
                     <p className={`${PROMPT} mb-2`}>A few more details:</p>
@@ -284,6 +266,14 @@ export default function Contact() {
                       required
                     />
                   </div>
+                  <PillGroup
+                    name="timeline"
+                    legend="It needs to happen:"
+                    options={contact.timelines}
+                    value={values.timeline}
+                    onChange={update}
+                    disabled={loading}
+                  />
                   <div>
                     <p className={`${PROMPT} mb-2`}>And you are:</p>
                     <div className="grid gap-10 md:grid-cols-2 md:gap-gutter">

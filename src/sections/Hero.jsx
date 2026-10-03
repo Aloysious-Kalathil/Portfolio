@@ -51,7 +51,7 @@ const MARKER_REACH = 280 // px: how far the pointer's influence carries
 const COLUMNS = { wide: [1.2, 20.6, 38.4, 56, 71.6, 89.2], narrow: [4, 37, 70] }
 
 /** Deterministic "is there a marker here": an irregular but stable rhythm. */
-const hasMarker = (col, row) => ((col * 7 + row * 13 + ((col * row) % 5)) % 9) < 5
+const hasMarker = (col, row) => ((col * 7 + row * 13 + ((col * row) % 5)) % 11) < 4
 
 /**
  * A field of small markers on the column lines. Each one reads out its live
@@ -112,7 +112,7 @@ function Markers({ animate }) {
         const distance = Math.hypot(pointer.x - m.x, pointer.y - screenY)
         const near = Math.max(0, 1 - distance / MARKER_REACH)
         m.value.textContent = String(Math.min(999, Math.round(distance))).padStart(3, '0')
-        m.node.style.opacity = (0.3 + near * 0.7).toFixed(2)
+        m.node.style.opacity = (0.22 + near * 0.78).toFixed(2)
         m.node.style.color = near > 0.02 ? color : ''
       })
     }
@@ -161,7 +161,7 @@ function Markers({ animate }) {
             <span
               key={`${col}-${row}`}
               data-marker
-              className="tabular absolute flex items-center gap-1.5 font-mono text-[11px] leading-none text-fg opacity-30 transition-colors duration-400"
+              className="tabular absolute flex items-center gap-1.5 font-mono text-[11px] leading-none text-fg opacity-[0.22] transition-colors duration-400"
               style={{ left: `${left}%`, top: 120 + row * MARKER_STEP }}
             >
               <span>+</span>
@@ -174,12 +174,13 @@ function Markers({ animate }) {
   )
 }
 
-/** Two-line label whose second line steps in, in the accent colour. */
-function Label({ lines, delay = 0, className = '' }) {
+/** Stacked label whose alternate lines step in. `tones` colours each line;
+ *  anything without one stays muted so the accent is used sparingly. */
+function Label({ lines, tones = [], delay = 0, className = '' }) {
   return (
-    <p data-avoid className={`text-[clamp(1rem,1.3vw,1.25rem)] font-medium leading-[1.2] tracking-[-0.01em] text-accent-ink ${className}`}>
+    <p data-avoid className={`text-[clamp(1rem,1.3vw,1.25rem)] font-medium leading-[1.2] tracking-[-0.01em] ${className}`}>
       {lines.map((line, i) => (
-        <ScrambleText key={line} delay={delay + i * 0.12} className={`block ${i % 2 ? 'pl-[2.2em]' : ''}`}>
+        <ScrambleText key={line} delay={delay + i * 0.12} className={`block ${i % 2 ? 'pl-[2.2em]' : ''} ${tones[i] || 'text-muted'}`}>
           {line}
         </ScrambleText>
       ))}
@@ -259,6 +260,7 @@ export default function Hero() {
 
             <Label
               lines={[siteConfig.title, `${siteConfig.location.city}, ${siteConfig.location.country}`]}
+              tones={['text-accent-ink', 'text-fg']}
               delay={0.5}
               className="col-span-4 md:col-span-3 md:col-start-3 md:row-start-2 md:mt-[9vh] lg:col-start-3"
             />
@@ -325,7 +327,7 @@ export default function Hero() {
       <button
         type="button"
         onClick={() => scrollToElement('#after-hero')}
-        className="group absolute right-margin top-[58%] hidden text-left text-[clamp(1rem,1.3vw,1.25rem)] font-medium leading-[1.2] tracking-[-0.01em] text-accent-ink md:block"
+        className="group absolute right-margin top-[58%] hidden text-left text-[clamp(1rem,1.3vw,1.25rem)] font-medium leading-[1.2] tracking-[-0.01em] text-muted transition-colors hover:text-fg md:block"
       >
         <ScrambleText delay={0.9} hover className="block">
           Scroll

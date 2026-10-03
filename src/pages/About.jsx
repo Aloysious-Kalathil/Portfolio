@@ -49,13 +49,13 @@ export default function About() {
               {about.heading}
             </SplitTextReveal>
           </div>
-          <Parallax speed={-0.14} className="col-span-3 md:col-span-4 lg:col-span-4 lg:col-start-9">
+          <Parallax speed={-0.14} className="col-span-3 max-w-[18rem] md:col-span-3 md:max-w-none lg:col-span-4 lg:col-start-9">
             <ScrollFade variant="clip" trigger="load" delay={0.3}>
               <Picture
                 src={about.portrait}
                 alt={`Portrait of ${siteConfig.name}`}
                 loading="eager"
-                sizes="(min-width:1024px) 30vw, 70vw"
+                sizes="(min-width:1024px) 30vw, (min-width:768px) 36vw, 70vw"
                 width={1200}
                 height={1500}
                 className="aspect-[4/5]"
@@ -100,7 +100,7 @@ export default function About() {
               {about.principles.map((item, i) => (
                 <li key={item.title}>
                   <span className="display block text-display-md text-accent-ink tabular">{pad(i + 1)}</span>
-                  <h2 className="mt-6 font-display text-2xl font-bold tracking-[-0.03em]">{item.title}</h2>
+                  <h2 className="mt-5 font-display text-xl font-bold tracking-[-0.02em]">{item.title}</h2>
                   <p className="mt-3 max-w-xs text-muted">{item.body}</p>
                 </li>
               ))}

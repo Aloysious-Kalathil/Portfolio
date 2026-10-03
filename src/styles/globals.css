@@ -166,8 +166,7 @@
   }
   .pill:hover,
   .pill[aria-current='page'],
-  .pill[aria-pressed='true'],
-  .pill[aria-checked='true'] {
+  .pill[aria-pressed='true'] {
     background: rgb(var(--pill-hover-bg, var(--fg)));
     color: rgb(var(--pill-hover-fg, var(--bg)));
   }
@@ -210,7 +209,7 @@
   /* Display type drawn as an outline */
   .text-outline {
     color: transparent;
-    -webkit-text-stroke: 1px rgb(var(--fg) / 0.45);
+    -webkit-text-stroke: 1px rgb(var(--fg) / 0.55);
   }
 
   /* Text field underline style used by the contact form */

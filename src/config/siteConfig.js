@@ -33,7 +33,7 @@ const siteConfig = {
       backgroundMesh: true, // interactive 3D terrain behind every page (needs webgl)
       magnetic: true,
       pageTransitions: true,
-      layoutGrid: true, // faint 12-column guides behind the page
+      layoutGrid: false, // faint 12-column guides behind the page
     },
 
     /** Home page sections, top to bottom. Remove a key to hide a section.
@@ -57,7 +57,7 @@ const siteConfig = {
     timezone: 'Asia/Kolkata', // IANA name — drives the live clock in the footer
     coordinates: '9.93° N, 76.26° E', // PLACEHOLDER
   },
-  email: 'hello@example.com', // PLACEHOLDER — use your real address
+  email: 'contact@aloysious.dev',
   availability: 'Open to freelance and full-time roles from November 2026', // PLACEHOLDER
   resume: '/resume.pdf', // put your PDF at public/resume.pdf
 
