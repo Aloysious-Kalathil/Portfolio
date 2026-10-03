@@ -83,6 +83,15 @@
     font-kerning: normal;
   }
 
+  /* The hero name: the merged-contour cut, so its outline is clean. Kerning
+     is off because the name is split into letters for its reveal (split
+     letters can't kern), and the solid spotlight copy has to line up with
+     the split outline exactly. */
+  .name-face {
+    font-family: 'Bricolage Grotesque Static', theme('fontFamily.display');
+    font-kerning: none;
+  }
+
   .hairline {
     @apply border-line;
   }

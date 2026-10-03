@@ -21,9 +21,11 @@ export function scramble(text, progress) {
  * Text that resolves out of random letters, left to right.
  *  trigger="load"   — plays once the page is visible (default)
  *  trigger="scroll" — plays when it enters the viewport
- *  trigger="none"   — only on hover
+ *  trigger="none"   — only on hover or on request
  *  hover            — replays when the nearest link/button (or itself) is hovered
- * Screen readers get the plain text; the animated copy is aria-hidden.
+ * Dispatching a `scramble` event on the element replays it as well.
+ * Screen readers get the plain text; the animated copy is aria-hidden. Only
+ * the visible copy can be selected, so copied text isn't doubled.
  */
 export default function ScrambleText({
   as: Tag = 'span',
@@ -44,23 +46,21 @@ export default function ScrambleText({
     (context, contextSafe) => {
       const el = live.current
       let alive = true
-      const state = { p: 0 }
-
-      const play = contextSafe((wait = 0) => {
-        gsap.killTweensOf(state)
-        state.p = 0
-        gsap.set(el, { autoAlpha: 1 })
-        gsap.to(state, {
-          p: 1,
-          duration,
-          delay: wait,
-          ease: 'none',
-          onUpdate: () => (el.textContent = scramble(text, state.p)),
-          onComplete: () => (el.textContent = text),
-        })
-      })
-
       if (reduced) return undefined
+
+      // One tween, restarted on every replay, so repeated plays don't pile up.
+      // The text stays hidden through any delay and shows as it starts.
+      const state = { p: 0 }
+      const tween = gsap.to(state, {
+        p: 1,
+        duration,
+        ease: 'none',
+        paused: true,
+        onStart: () => gsap.set(el, { autoAlpha: 1 }),
+        onUpdate: () => (el.textContent = scramble(text, state.p)),
+        onComplete: () => (el.textContent = text),
+      })
+      const play = (wait = 0) => tween.delay(wait).restart(true)
 
       if (trigger !== 'none') {
         gsap.set(el, { autoAlpha: 0 })
@@ -76,9 +76,11 @@ export default function ScrambleText({
       const target = hover ? root.current.closest('a, button') || root.current : null
       const replay = () => play(0)
       target?.addEventListener('pointerenter', replay)
+      root.current.addEventListener('scramble', replay)
       return () => {
         alive = false
         target?.removeEventListener('pointerenter', replay)
+        root.current?.removeEventListener('scramble', replay)
         el.textContent = text
       }
     },
@@ -87,7 +89,7 @@ export default function ScrambleText({
 
   return (
     <Tag ref={root} className={className} {...rest}>
-      <span className="sr-only">{text}</span>
+      <span className="sr-only select-none">{text}</span>
       <span ref={live} aria-hidden="true">
         {text}
       </span>

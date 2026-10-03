@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import siteConfig from '../config/siteConfig'
-import { gsap, useGSAP } from '../utils/gsapSetup'
+import { gsap, useGSAP, EASE } from '../utils/gsapSetup'
 import { useFeatures } from '../hooks/useFeatures'
 import { scrollToElement } from '../hooks/useLenis'
+import { whenPageVisible } from '../hooks/useSiteReady'
 import { liveColorCss } from '../utils/liveColor'
 import SplitTextReveal from '../components/animations/SplitTextReveal'
 import ScrambleText from '../components/animations/ScrambleText'
@@ -11,31 +12,22 @@ const [firstName, ...rest] = siteConfig.name.split(' ')
 const lastName = rest.join(' ')
 
 const NAME_LINES = 'flex flex-col whitespace-nowrap md:flex-row md:gap-[0.2em]'
+const NAME_FILL = 0.995 // share of the row the name spans; the rest absorbs rounding
 
 /**
- * Sizes the name so it runs edge to edge (one line on wide screens, two
- * stacked on phones) — unless that would push it below the fold on wide,
- * short screens, in which case the height left under the labels sets the
- * size instead.
+ * Sizes the name so it always spans the full width of the bottom row (one
+ * line on wide screens, two stacked on phones). On short screens the hero
+ * grows rather than the name shrinking.
  */
 function useFitName(containerRef, measureRef) {
   useLayoutEffect(() => {
     const container = containerRef.current
     const measure = measureRef.current
-    const nameBlock = container.closest('[data-hero-name]')
-    const frame = nameBlock.parentElement
+    const frame = container.closest('[data-hero-name]').parentElement
     const fit = () => {
       container.style.fontSize = '100px'
-      const byWidth = (100 * container.clientWidth) / measure.offsetWidth
-
-      // The labels sit centred in whatever height the name leaves them, so
-      // budget for their natural height plus a little air
-      const labels = frame.querySelector('[data-hero-labels]')
-      const labelsBottom = labels.parentElement.offsetTop + labels.offsetHeight + 48
-      const padBottom = parseFloat(getComputedStyle(frame).paddingBottom)
-      const byHeight = (100 * (window.innerHeight - labelsBottom - padBottom)) / measure.offsetHeight
-
-      container.style.fontSize = `${Math.floor(Math.min(byWidth * 0.985, byHeight) * 10) / 10}px`
+      const size = (100 * container.clientWidth) / measure.getBoundingClientRect().width
+      container.style.fontSize = `${Math.floor(size * NAME_FILL * 10) / 10}px`
     }
     fit()
     document.fonts?.ready.then(fit)
@@ -175,17 +167,102 @@ function Markers({ animate }) {
 }
 
 /** Stacked label whose alternate lines step in. `tones` colours each line;
- *  anything without one stays muted so the accent is used sparingly. */
-function Label({ lines, tones = [], delay = 0, className = '' }) {
+ *  anything without one stays muted so the accent is used sparingly. Each
+ *  line sits in its own mask so it can slide in and out (see useCopyCycle). */
+function Label({ lines, tones = [], delay = 0, className = '', ...rest }) {
   return (
-    <p data-avoid className={`text-[clamp(1rem,1.3vw,1.25rem)] font-medium leading-[1.2] tracking-[-0.01em] ${className}`}>
+    <p data-avoid className={`text-[clamp(1rem,1.3vw,1.25rem)] font-medium leading-[1.2] tracking-[-0.01em] ${className}`} {...rest}>
       {lines.map((line, i) => (
-        <ScrambleText key={line} delay={delay + i * 0.12} className={`block ${i % 2 ? 'pl-[2.2em]' : ''} ${tones[i] || 'text-muted'}`}>
-          {line}
-        </ScrambleText>
+        <span key={line} className="split-line-mask block overflow-hidden">
+          <ScrambleText data-line delay={delay + i * 0.12} className={`block ${i % 2 ? 'pl-[2.2em]' : ''} ${tones[i] || 'text-muted'}`}>
+            {line}
+          </ScrambleText>
+        </span>
       ))}
     </p>
   )
+}
+
+// ── Copy that takes turns ───────────────────────────────────────────────────
+const HOLD = 5 // seconds each set of copy stays up
+const INTRO = 1.6 // seconds the load reveal takes before the first hold starts
+const SWAP = 1.5 // seconds from one set starting to leave to the next settling
+
+/**
+ * The hero copy comes in two sets that take turns: set "a" (tagline and
+ * availability) holds for HOLD seconds, slides up out of its line masks, and
+ * set "b" (title and city) rises in; then back again. Blocks keep their place
+ * in the layout, so nothing around them moves, and every line stays readable
+ * to screen readers throughout. The cycle pauses while the hero is off screen.
+ */
+function useCopyCycle(rootRef, enabled) {
+  useLayoutEffect(() => {
+    if (!enabled) return undefined
+    const root = rootRef.current
+    const blocks = (set) => Array.from(root.querySelectorAll(`[data-cycle="${set}"]`))
+    // Looked up on every turn: SplitText rebuilds the tagline's lines on resize
+    const lines = (set) => Array.from(root.querySelectorAll(`[data-cycle="${set}"] .split-line, [data-cycle="${set}"] [data-line]`))
+
+    let shown = 'a'
+    let timer = null
+    let running = []
+    let onScreen = true
+    let alive = true
+    gsap.set(blocks('b'), { opacity: 0 })
+
+    const schedule = (seconds) => {
+      timer = gsap.delayedCall(seconds, turn)
+      if (!onScreen) timer.pause()
+    }
+
+    function turn() {
+      const from = shown
+      const to = from === 'a' ? 'b' : 'a'
+      shown = to
+      const incoming = lines(to)
+      gsap.set(incoming, { yPercent: 110, rotate: 2.5, transformOrigin: '0% 100%' })
+      running = [
+        gsap.to(lines(from), {
+          yPercent: -110,
+          duration: 0.6,
+          stagger: 0.05,
+          ease: 'power3.in',
+          overwrite: 'auto',
+          onComplete: () => gsap.set(blocks(from), { opacity: 0 }),
+        }),
+        gsap.to(incoming, {
+          yPercent: 0,
+          rotate: 0,
+          duration: 1.1,
+          stagger: 0.08,
+          delay: 0.4,
+          ease: EASE.out,
+          overwrite: 'auto',
+          onStart: () => {
+            gsap.set(blocks(to), { opacity: 1 })
+            incoming.forEach((line) => line.matches('[data-line]') && line.dispatchEvent(new Event('scramble')))
+          },
+        }),
+      ]
+      schedule(SWAP + HOLD)
+    }
+
+    const io = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting
+      timer?.paused(!onScreen)
+    })
+    io.observe(root)
+    whenPageVisible().then(() => alive && schedule(INTRO + HOLD))
+
+    return () => {
+      alive = false
+      io.disconnect()
+      timer?.kill()
+      running.forEach((tween) => tween.kill())
+      gsap.set([...blocks('a'), ...blocks('b')], { clearProps: 'opacity' })
+      gsap.set([...lines('a'), ...lines('b')], { clearProps: 'transform' })
+    }
+  }, [rootRef, enabled])
 }
 
 export default function Hero() {
@@ -197,6 +274,7 @@ export default function Hero() {
   const spotlight = !reduced && !touch
 
   useFitName(nameBox, measure)
+  useCopyCycle(root, !reduced)
 
   // Spotlight: the outlined name fills in under the pointer
   useEffect(() => {
@@ -245,30 +323,33 @@ export default function Hero() {
     <section ref={root} className="relative flex min-h-[100svh] flex-col overflow-hidden" aria-labelledby="hero-name">
       <Markers animate={!reduced} />
 
-      <div className="frame relative flex flex-1 flex-col pb-margin pt-[calc(var(--margin)+6.5rem)]">
-        <div className="flex flex-1 items-center pb-10">
+      {/* Vertical gaps shrink on short screens so the full-width name still
+          fits above the fold */}
+      <div className="frame relative flex flex-1 flex-col pb-margin pt-[calc(var(--margin)+5rem)]">
+        <div className="flex flex-1 items-center pb-[clamp(1rem,4vh,2.5rem)]">
           <div data-hero-labels className="grid-layout w-full gap-y-10 md:gap-y-0">
-            <SplitTextReveal
-              as="p"
-              data-avoid
-              trigger="load"
-              delay={0.35}
-              className="col-span-3 text-lede text-balance md:col-span-4 md:row-start-1 lg:col-span-3"
-            >
-              {siteConfig.tagline}
-            </SplitTextReveal>
+            {/* The cycle hides this wrapper, not the paragraph: SplitTextReveal
+                shows the paragraph again whenever it re-splits (resize, late
+                font load) */}
+            <div data-cycle="a" className="col-span-3 md:col-span-4 md:row-start-1 lg:col-span-3">
+              <SplitTextReveal as="p" data-avoid trigger="load" delay={0.35} className="text-lede text-balance">
+                {siteConfig.tagline}
+              </SplitTextReveal>
+            </div>
 
             <Label
               lines={[siteConfig.title, `${siteConfig.location.city}, ${siteConfig.location.country}`]}
               tones={['text-accent-ink', 'text-fg']}
               delay={0.5}
-              className="col-span-4 md:col-span-3 md:col-start-3 md:row-start-2 md:mt-[9vh] lg:col-start-3"
+              data-cycle="b"
+              className="col-span-4 md:col-span-3 md:col-start-3 md:row-start-2 md:mt-[clamp(0.75rem,9vh_-_1.5rem,6rem)] lg:col-start-3"
             />
             {availability.length > 0 && (
               <Label
                 lines={availability}
                 delay={0.7}
-                className="col-span-4 md:col-span-3 md:col-start-6 md:row-start-3 md:mt-[5vh] lg:col-start-8"
+                data-cycle="a"
+                className="col-span-4 md:col-span-3 md:col-start-6 md:row-start-3 md:mt-[clamp(0.5rem,5vh_-_0.75rem,3rem)] lg:col-start-8"
               />
             )}
             <p data-avoid className="label col-span-2 md:col-start-1 md:row-start-3 md:self-end">
@@ -278,11 +359,11 @@ export default function Hero() {
         </div>
 
         <div data-hero-name className="will-change-transform">
-          <h1 id="hero-name" className="relative">
+          <h1 id="hero-name" data-avoid className="relative">
             <span className="sr-only">
               {siteConfig.name}, {siteConfig.title}
             </span>
-            <span ref={nameBox} aria-hidden="true" className="display relative block leading-[0.88] tracking-[-0.055em]">
+            <span ref={nameBox} aria-hidden="true" className="display name-face relative block leading-[0.88] tracking-[-0.055em]">
               {/* invisible copy used to measure the name at a known size */}
               <span ref={measure} className={`pointer-events-none invisible absolute left-0 top-0 ${NAME_LINES}`}>
                 <span>{firstName}</span>

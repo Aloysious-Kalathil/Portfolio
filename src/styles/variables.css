@@ -12,6 +12,16 @@
   font-style: normal;
   font-display: swap;
 }
+/* Static weight-800 cut of the same face with overlapping contours merged:
+   outlined (stroked) text in the variable font shows the overlaps as lines
+   inside the letters. Used only for the hero name (.name-face). */
+@font-face {
+  font-family: 'Bricolage Grotesque Static';
+  src: url('/fonts/bricolage-grotesque-800-static.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
 @font-face {
   font-family: 'Geist';
   src: url('/fonts/geist-latin.woff2') format('woff2');
