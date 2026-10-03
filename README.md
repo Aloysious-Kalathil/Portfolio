@@ -4,9 +4,9 @@ Personal portfolio showcasing selected projects, frontend work, and interactive 
 
 Built with a focus on expressive typography, motion, WebGL, accessibility, and responsive interaction.
 
-### [View Live Portfolio →](https://YOUR-DOMAIN.com)
+### [View Live Portfolio →](https://aloysious.dev)
 
-![Portfolio Preview](./public/images/readme/preview.webp)
+![Portfolio Preview](./public/images/readme/portfolio.webp)
 
 ---
 
