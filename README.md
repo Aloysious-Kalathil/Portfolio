@@ -1,4 +1,4 @@
-# George Aloysious — Portfolio
+# George Aloysious - Portfolio
 
 Personal portfolio showcasing selected projects, frontend work, and interactive web experiences.
 
