@@ -1,4 +1,4 @@
-# George Aloysious — Portfolio
+# George Aloysious - Portfolio
 
 Personal portfolio showcasing selected projects, frontend work, and interactive web experiences.
 
@@ -6,7 +6,7 @@ Built with a focus on expressive typography, motion, WebGL, accessibility, and r
 
 ### [View Live Portfolio →](https://aloysious.dev)
 
-![Portfolio Preview](./public/public/videos/portfolio.webp)
+![Portfolio Preview](./public/videos/portfolio.webp)
 
 ---
 
