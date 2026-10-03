@@ -46,11 +46,11 @@ const siteConfig = {
   name: 'George Aloysious',
   shortName: 'George',
   monogram: 'GA',
-  title: 'Frontend developer', // PLACEHOLDER
+  title: 'Software developer & writer',
   /** One line. Shown under the hero name and in meta descriptions. */
-  tagline: 'I build interfaces that feel as considered as the products behind them.', // PLACEHOLDER
+  tagline: 'I turn ideas into things people can use, read and experience.',
   /** 2–3 sentences for the home intro + about page opener. */
-  bio: 'I write the layer people actually touch — layout, type, motion and the thousand small states between them. Most of my work sits where a design file stops being enough: interactions that have to be tuned by feel, performance budgets that shape what the design can be, and components other developers will live with for years.', // PLACEHOLDER
+  bio: 'I’m a software developer and writer who enjoys turning ideas into things people can actually use, read, and experience. This portfolio is where I bring both sides of my work together — the things I build and the things I write.',
   location: {
     city: 'Kochi', // PLACEHOLDER
     country: 'India', // PLACEHOLDER
@@ -74,7 +74,7 @@ const siteConfig = {
   /** One paragraph, revealed word by word on scroll. Wrap a phrase in
    *  *asterisks* to set it in the display face. */
   manifesto:
-    'I’m George Aloysious, a *frontend developer* who builds the layer people actually touch: layout, type, motion and the thousand small states between them. I started out rebuilding sites I admired, one inspect-element at a time, and never really stopped. Most of my work sits where a design file stops being enough — *interactions tuned by feel*, performance budgets that shape what the design can be, and components other developers will live with for years. I care about the part nobody screenshots: the hover state that tells you a thing is clickable before you’ve decided to click it, the form that remembers what you typed when the network drops, *the animation that finishes before you notice it started*. Design gets a site to look right. I make sure it still feels right on a four-year-old phone, a slow connection and the fortieth visit. I’d rather *ship one thing properly* than five things roughly — and I work best with designers and small teams who want the build to be as deliberate as the design.', // PLACEHOLDER
+    'I’m a *software developer and writer* who enjoys turning ideas into things people can actually use, read, and experience. On the development side, I build projects, experiment with new technologies, and create *software that solves real problems*. I’m currently expanding my portfolio with more projects and will be moving into app development as well. Outside of code, I write stories and content. Writing gives me another way to create, communicate ideas, and *tell meaningful stories*. This portfolio is where I bring both sides of my work together — *the things I build and the things I write*.',
 
   /** "What I do" — numbered capability rows on Home (sections/Features.jsx). */
   services: [
@@ -108,11 +108,12 @@ const siteConfig = {
 
   // ── About page ────────────────────────────────────────────────────────────
   about: {
-    heading: 'I care about the part of the work nobody screenshots.', // PLACEHOLDER
+    heading: 'The things I build, and the things I write.',
     paragraphs: [
-      'The hover state that tells you a thing is clickable before you’ve decided to click it. The form that remembers what you typed when the network drops. The animation that finishes before you notice it started.', // PLACEHOLDER
-      'I started out rebuilding sites I admired, one inspect-element at a time, and never really stopped. Today I work with designers and small product teams who want the build to be as deliberate as the design — and who’d rather ship one thing properly than five things roughly.', // PLACEHOLDER
-      'Away from the editor I shoot film, read about typography more than is reasonable, and keep a list of websites that made me stop scrolling.', // PLACEHOLDER
+      'I’m a software developer and writer who enjoys turning ideas into things people can actually use, read, and experience.',
+      'On the development side, I build projects, experiment with new technologies, and create software that solves real problems. I’m currently expanding my portfolio with more projects and will be moving into app development as well.',
+      'Outside of code, I write stories and content. Writing gives me another way to create, communicate ideas, and tell meaningful stories.',
+      'This portfolio is where I bring both sides of my work together — the things I build and the things I write.',
     ],
     portrait: '/images/portrait', // extension-less: .avif + .webp are looked up
     principles: [
@@ -145,8 +146,8 @@ const siteConfig = {
   seo: {
     siteUrl: 'https://your-domain.com', // PLACEHOLDER — used for canonical + OG URLs
     titleTemplate: '%s — George Aloysious',
-    defaultTitle: 'George Aloysious — Frontend developer',
-    description: 'Portfolio of George Aloysious, a frontend developer building fast, carefully animated interfaces with React, GSAP and WebGL.', // PLACEHOLDER
+    defaultTitle: 'George Aloysious — Software developer & writer',
+    description: 'Portfolio of George Aloysious, a software developer and writer: the software I build and the stories I write.',
     ogImage: '/images/og.jpg',
   },
 }
