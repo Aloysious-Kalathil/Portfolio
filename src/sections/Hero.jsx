@@ -1,14 +1,11 @@
-import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import siteConfig from '../config/siteConfig'
 import { gsap, useGSAP } from '../utils/gsapSetup'
 import { useFeatures } from '../hooks/useFeatures'
-import { whenPageVisible } from '../hooks/useSiteReady'
 import { scrollToElement } from '../hooks/useLenis'
 import { liveColorCss } from '../utils/liveColor'
 import SplitTextReveal from '../components/animations/SplitTextReveal'
 import ScrambleText from '../components/animations/ScrambleText'
-
-const ModelScene = lazy(() => import('../components/animations/ModelScene'))
 
 const [firstName, ...rest] = siteConfig.name.split(' ')
 const lastName = rest.join(' ')
@@ -195,28 +192,10 @@ export default function Hero() {
   const nameBox = useRef(null)
   const measure = useRef(null)
   const fill = useRef(null)
-  const { webgl, reduced, touch } = useFeatures()
+  const { reduced, touch } = useFeatures()
   const spotlight = !reduced && !touch
 
   useFitName(nameBox, measure)
-
-  // The 3D scene is the heaviest thing on the page: fetch it only once the
-  // page is visible and the main thread is idle, so it never delays first paint
-  const [loadScene, setLoadScene] = useState(false)
-  useEffect(() => {
-    if (!webgl) return undefined
-    let cancelled = false
-    let idleId
-    const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 400))
-    const cancelIdle = window.cancelIdleCallback || clearTimeout
-    whenPageVisible().then(() => {
-      if (!cancelled) idleId = idle(() => setLoadScene(true), { timeout: 1500 })
-    })
-    return () => {
-      cancelled = true
-      if (idleId) cancelIdle(idleId)
-    }
-  }, [webgl])
 
   // Spotlight: the outlined name fills in under the pointer
   useEffect(() => {
@@ -247,23 +226,15 @@ export default function Hero() {
   useGSAP(
     () => {
       if (reduced) return
-      // Leaving the hero: the name lags behind the scroll (parallax) and the
-      // 3D piece recedes. Both start from rest at the top of the page.
+      // Leaving the hero: the name lags behind the scroll (parallax),
+      // starting from rest at the top of the page
       gsap.to('[data-hero-name]', {
         yPercent: 40,
         ease: 'none',
         scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true },
       })
-      if (!webgl) return
-      gsap.to('[data-hero-model]', {
-        autoAlpha: 0,
-        scale: 0.85,
-        yPercent: -12,
-        ease: 'none',
-        scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true },
-      })
     },
-    { scope: root, dependencies: [reduced, webgl], revertOnUpdate: true },
+    { scope: root, dependencies: [reduced], revertOnUpdate: true },
   )
 
   const year = new Date().getFullYear()
@@ -272,16 +243,6 @@ export default function Hero() {
   return (
     <section ref={root} className="relative flex min-h-[100svh] flex-col overflow-hidden" aria-labelledby="hero-name">
       <Markers animate={!reduced} />
-
-      {webgl && (
-        <div data-hero-model className="absolute right-[2%] top-[9%] h-[30%] w-[58%] md:right-[5%] md:top-[3%] md:h-[40%] md:w-[30%]">
-          {loadScene && (
-            <Suspense fallback={null}>
-              <ModelScene className="h-full w-full" />
-            </Suspense>
-          )}
-        </div>
-      )}
 
       <div className="frame relative flex flex-1 flex-col pb-margin pt-[calc(var(--margin)+6.5rem)]">
         <div className="flex flex-1 items-center pb-10">

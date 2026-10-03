@@ -1,6 +1,6 @@
 # George Aloysious — Portfolio
 
-A dark editorial portfolio built with **React + Vite + Tailwind CSS**, animated with **GSAP + ScrollTrigger + SplitText**, smoothed by **Lenis**, with **Three.js (React Three Fiber)** for the background mesh, the hero blob and the project shader transition.
+A dark editorial portfolio built with **React + Vite + Tailwind CSS**, animated with **GSAP + ScrollTrigger + SplitText**, smoothed by **Lenis**, with **Three.js (React Three Fiber)** for the background mesh and the project shader transition.
 
 **Design direction:** a type specimen more than a template. Bricolage Grotesque (display, 800, tight tracking) with Geist and Geist Mono, one ink-navy background (`#0B0D14`), one text colour and one lime accent (`#C6F23A`, deepened to olive `#4B6600` on the light theme), over an interactive 3D wire terrain. Navigation is a stack of pills top-left and the name set vertically top-right. Motion uses `expo.out` and `power4.inOut` easing throughout: masked line reveals, text that resolves out of scrambled letters, scroll-scrubbed parallax and 3D rollers. Nothing bounces.
 
@@ -12,7 +12,7 @@ A dark editorial portfolio built with **React + Vite + Tailwind CSS**, animated 
 
 1. [Quick start](#quick-start)
 2. [Where to edit content](#where-to-edit-content)
-3. [Images, logos, 3D model, résumé](#images-logos-3d-model-résumé)
+3. [Images, logos, résumé](#images-logos-résumé)
 4. [Environment variables and reCAPTCHA](#environment-variables-and-recaptcha)
 5. [Deploying for free (Vercel or Netlify)](#deploying-for-free)
 6. [How the pieces fit](#how-the-pieces-fit)
@@ -49,7 +49,6 @@ Almost everything lives in three files.
 | `settings.accent` / `accentInk` | The accent colour, plus a darker shade of it used for accent **text** on the light theme (to keep 4.5:1 contrast). |
 | `settings.features.*` | Switches for `preloader`, `cursor`, `smoothScroll`, `webgl`, `backgroundMesh`, `magnetic`, `pageTransitions` and `layoutGrid`. |
 | `settings.homeSections` | Order of Home sections. Remove a key to hide it. Keys: `hero`, `manifesto`, `work`, `features`, `collage`, `testimonials` (testimonials is off by default; add the key to show it). |
-| `settings.model` | Path and scale of the hero 3D model. |
 
 Below the settings sit your name, title, tagline, bio, the `manifesto` paragraph (wrap a phrase in `*asterisks*` to set it in the display face), location/timezone (drives the live clock), email, availability, résumé path, social links (an empty `url` hides that network), services ("What I do"), skills (the marquee rows), the About page copy, experience/education, contact copy (including the pill choices on the contact form: `contact.topics` and `contact.timelines`) and SEO defaults.
 
@@ -86,7 +85,7 @@ Three placeholders, each marked `"placeholder": true`, which shows a visible **P
 
 ---
 
-## Images, logos, 3D model, résumé
+## Images, logos, résumé
 
 ### Images (modern formats, lazy-loaded)
 
@@ -108,16 +107,6 @@ The current artwork is generated placeholder art. Replace it before launch.
 The site's own mark is the name set vertically in the top-right corner (text, from `siteConfig.name`), so there is no logo image to maintain in the layout. `public/images/logos/logo-dark.svg` (light ink) and `logo-light.svg` (dark ink) are the "GA." monogram outlined from Bricolage Grotesque, kept for use elsewhere (email signature, README, social profiles). Their accent square is hard-coded (`#C6F23A` in `logo-dark.svg` and `icon.svg`, `#4B6600` in `logo-light.svg`), so change it there if you change the accent.
 
 Favicon files: `public/favicon.ico`, `public/images/icons/icon.svg` and `apple-touch-icon.png`. The social share image is `public/images/og.jpg` (1200×630).
-
-### 3D model
-
-Put your model at **`public/models/avatar.glb`** (the path is set in `siteConfig.settings.model.src`, and `scale` adjusts its size). Until that file exists, the hero shows a liquid-chrome blob that wobbles with pointer speed, pulses on click and is lit in the live colour. The scene:
-
-- is lazy-loaded after first paint, when the browser is idle
-- turns gently toward the mouse and pauses rendering when scrolled out of view
-- is skipped entirely with reduced motion, on software-only GPUs, with Save-Data, or with `features.webgl: false`
-
-Keep the model small (under ~2 MB). [gltf.report](https://gltf.report) can compress it.
 
 ### Résumé
 
@@ -189,7 +178,7 @@ Every failure returns a clear message that the form shows inline. No `alert()` p
 ```
 public/
 ├── images/        logos/, icons/, backgrounds/, projects/<slug>/, portrait-*, og.jpg
-├── models/        avatar.glb goes here (optional)
+├── models/        3D models (glb, gltf) if you add any
 ├── videos/
 ├── fonts/
 └── favicon.ico
@@ -200,7 +189,7 @@ src/
 │   ├── layout/    Navbar (pills, wordmark, progress bar), Footer, Sidebar, Cursor,
 │   │              Preloader, PageTransition
 │   └── animations/SplitTextReveal, ScrambleText, ScrollFade, Parallax, MagneticButton,
-│                  BackgroundMesh, ModelScene, GridToFullscreen (+ GridTransitionScene shader)
+│                  BackgroundMesh, GridToFullscreen (+ GridTransitionScene shader)
 ├── pages/         Home, About, Projects, ProjectDetail, Contact, NotFound
 ├── sections/      Hero, Manifesto, Work, Features, Collage, Testimonials
 ├── hooks/         useLenis (smooth scroll + scroll lock), useScroll (+ useChromeTone),
@@ -227,7 +216,7 @@ netlify/functions/ verify-and-send.mjs         (Netlify adapter for the same fun
 - **Project → detail:** clicking a project (a Home frame or a Work-page card) hands its screen rect to an overlay that lives outside the routes. The overlay expands the image with a vertex shader, navigates, and lifts only once the detail page's hero image has loaded. Without WebGL, a GSAP-scaled image does the same job. With reduced motion, it's a short fade.
 - **Background mesh:** `BackgroundMesh.jsx` draws a wire terrain on a fixed canvas behind every page. It rises under the mouse or a finger, sends a ripple out from each click or tap, and drifts, tilts and swells as the page scrolls. It loads when the browser is idle, follows the theme colours, and is skipped wherever WebGL is (reduced motion, software GPUs, Save-Data). Turn it off with `features.backgroundMesh: false`.
 - **Cleanup:** every animation lives in `useGSAP` / `gsap.context`, so switching pages reverts all tweens, ScrollTriggers and SplitText splits.
-- **Cursor:** a small GSAP `quickTo` dot and a trailing ring that becomes a caret over large text. Its colour, the background mesh glow and the hero blob light all share one "live colour" (`utils/liveColor.js`) that starts at the accent and drifts through hues as you move and scroll. Data attributes set its states: `data-cursor="view|drag|text|link|none"` and `data-cursor-label="…"`.
+- **Cursor:** a small GSAP `quickTo` dot and a trailing ring that becomes a caret over large text. Its colour, the background mesh glow and the hero markers all share one "live colour" (`utils/liveColor.js`) that starts at the accent and drifts through hues as you move and scroll. Data attributes set its states: `data-cursor="view|drag|text|link|none"` and `data-cursor-label="…"`.
 
 Tooling note: `@fortawesome/free-brands-svg-icons` provides the social icons, rendered by the small `BrandIcon` component instead of FontAwesome's ~70 KB runtime.
 
@@ -239,7 +228,7 @@ Tooling note: `@fortawesome/free-brands-svg-icons` provides the social icons, re
 | --- | --- |
 | `prefers-reduced-motion` | No Lenis, parallax, cursor, magnetic pull, WebGL, text scramble or rollers. Reveals become short opacity fades, and transitions become quick crossfades. |
 | Touch / coarse pointer | No custom cursor, magnetic effects or name spotlight (the name is solid). Native scrolling. The background mesh still follows a finger and ripples on tap. |
-| No hardware WebGL (software renderer, Save-Data, < 2 GB memory) | Background mesh and hero blob skipped. Projects open with the GSAP image expansion. |
+| No hardware WebGL (software renderer, Save-Data, < 2 GB memory) | Background mesh skipped. Projects open with the GSAP image expansion. |
 
 Other details:
 - Semantic landmarks, a skip link, and one visible focus style in both themes.
@@ -262,5 +251,4 @@ Everything below is sample content, marked `PLACEHOLDER` in the code where it's 
 - [ ] `testimonials.json`: three quotes
 - [ ] Images: project covers and galleries, `portrait-*`, `og.jpg`
 - [ ] `public/resume.pdf`
-- [ ] `public/models/avatar.glb` (optional; the abstract sculpture shows until it exists)
 - [ ] `.env` / hosting environment variables

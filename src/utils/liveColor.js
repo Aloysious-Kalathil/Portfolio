@@ -1,5 +1,5 @@
 /**
- * One colour shared by the cursor, the background mesh and the hero blob.
+ * One colour shared by the cursor, the background mesh and the hero markers.
  * It starts at the accent (lime) and its hue drifts as the pointer travels and
  * the page scrolls, so everything you touch shifts colour together.
  */

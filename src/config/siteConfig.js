@@ -29,7 +29,7 @@ const siteConfig = {
       preloader: true, // shows once per browser session
       cursor: true,
       smoothScroll: true,
-      webgl: true, // hero 3D scene + projects grid shader transition
+      webgl: true, // projects shader transition (and the background mesh below)
       backgroundMesh: true, // interactive 3D terrain behind every page (needs webgl)
       magnetic: true,
       pageTransitions: true,
@@ -40,13 +40,6 @@ const siteConfig = {
      *  Available: hero, manifesto, work, features, collage, testimonials.
      *  (The footer is the contact call-to-action on every page.) */
     homeSections: ['hero', 'manifesto', 'work', 'features', 'collage'],
-
-    /** 3D model shown in the hero. Drop your file at this path; if it is
-     *  missing, a liquid-chrome blob renders instead. */
-    model: {
-      src: '/models/avatar.glb',
-      scale: 1,
-    },
   },
 
   // ── Identity ──────────────────────────────────────────────────────────────
